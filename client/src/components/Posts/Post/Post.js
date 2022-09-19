@@ -3,6 +3,7 @@ import './styles.css';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography } from '@mui/material';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useDispatch } from "react-redux";
@@ -11,20 +12,40 @@ import { deletePost, likePost } from "../../../redux/postSlice";
 
 const Post = ({ post, setCurrentId }) => {
     const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem('profile'));
+    console.log('what user', user?.result);
+
+    const Likes = () => {
+        if (post.likes.length > 0) {
+            return post.likes.find((like) => like === ( user?.result?._id))
+                ? (
+                    <><ThumbUpIcon fontSize="small" />&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`}</>
+                ) : ( //if you havent liked
+                    <><ThumbUpIcon fontSize="small" />&nbsp;{post.likes.length} {post.likes.length === 1 ? 'Like' : 'Likes'}</>
+                );
+        }
+        //if no one likes yet
+        return <><ThumbUpOffAltIcon fontSize="small" />&nbsp;Like</>;
+    };
+
+
+
 
 
     return (
         <Card className='card' sx={{ borderRadius: '15px', maxWidth: '100%' }}>
-            <CardMedia className='media' image={post.selectedFile} title={post.title} component='div'/>
+            <CardMedia className='media' image={post.selectedFile} title={post.title} component='div' />
             <div className='overlay'>
-                <Typography variant='h5'>{post.creator}</Typography>
+                <Typography variant='h5'>{post.name}</Typography>
                 <Typography variant="body2">{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</Typography>
             </div>
+
+            {(user?.result?._id === post?.creator) && (
             <div className='overlay2'>
                 <Button style={{ color: 'white' }} size="small" onClick={() => { setCurrentId(post._id) }}>
                     <MoreHorizIcon fontSize='medium' align="left" />
                 </Button>
-            </div>
+            </div> )}
 
             <CardContent>
                 <div className='details' >
@@ -34,18 +55,20 @@ const Post = ({ post, setCurrentId }) => {
                 <Typography variant='body2' color="textSecondary" component="p" gutterBottom>{post.message}</Typography>
             </CardContent>
 
-            <CardActions className='cardActions'>
-                <Button size='small' color='primary' onClick={() => dispatch(likePost(post._id))}>
-                    <ThumbUpIcon fontSize='small' />
-                    &nbsp;like &nbsp;
-                    {post.likeCount}
+            <CardActions className='cardActions'> 
+            {/* disable buttonn if no user logged */}
+                <Button size='small' disabled={!user?.result} color='primary' onClick={() => dispatch(likePost(post._id))}>
+                    <Likes />
                 </Button>
+                {/* Disable button for non creator */}
+                {(user?.result?._id === post?.creator) && (
+
                 <Button size='small' color='primary' onClick={() => dispatch(deletePost(post._id))}>
                     <DeleteIcon fontSize='small' />
                     Delete
-                </Button>
+                </Button>)}
             </CardActions>
-            
+
         </Card>
     );
 }

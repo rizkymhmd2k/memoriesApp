@@ -23,7 +23,8 @@ export const createPost = createAsyncThunk('posts/create', async (newPost) => {
 
 export const updatePost = createAsyncThunk('posts/:id/update', async ({ currentId, postData }) => {
     const response = await api.updatePost(currentId, postData);
-
+    console.log('from test',currentId);
+    console.log('updatedata', response);
     return response.data;
 });
 
@@ -36,6 +37,12 @@ export const likePost = createAsyncThunk('posts/:id/likepost', async (currentId)
     const response = await api.likePost(currentId);
 
     return response.data;
+});
+
+export const googleasu = createAsyncThunk('users/signingogle', async ( accessToken ) => {
+    // const response = await api.updatePost(currentId, postData);
+    console.log('from test', accessToken);
+    // return response.data;
 });
 
 
@@ -88,6 +95,7 @@ export const postsSlice = createSlice({
         });
     },
 });
+
 export const { setIsLoading, setSelectedPost } = postsSlice.actions; //not used?
 
 export default postsSlice.reducer;

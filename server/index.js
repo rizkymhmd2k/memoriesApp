@@ -6,7 +6,10 @@ import express from "express";
 import cors from 'cors';
 
 import postRoutes from './routes/posts.js'
+import userRoutes from './routes/user.js';
+
 const app = express();
+
 
 //midlleware
 app.use(express.json({ limit: '30mb', extended: true }))
@@ -21,6 +24,8 @@ app.use((req, res, next) => {
 
 //route
 app.use('/posts', postRoutes)
+app.use('/users', userRoutes);
+
 
 const PORT = process.env.PORT|| 2002;
 
