@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { Paper, Typography, CircularProgress, Divider, Box } from '@mui/material'
+import { Paper, Typography, CircularProgress, Divider, Box, Grid } from '@mui/material'
 import { useDispatch, useSelector } from "react-redux";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 import { useNavigate, useParams } from "react-router-dom";
 import { getPost, getPostsBySearch } from '../../redux/postSlice';
-
+import CommentSection from "./CommentSection";
 
 
 
@@ -14,8 +14,8 @@ const PostDetails = () => {
 
   // const { posts, isLoading } = useSelector(state => state.memoryPosts)
   // console.log('postsssdetails', posts);
-  console.log('xxxxposts', posts);
-  console.log('apost', post);
+  // console.log('xxxxposts', posts);
+  // console.log('apost', post);
 
 
   const dispatch = useDispatch()
@@ -23,7 +23,7 @@ const PostDetails = () => {
 
   //get the id of params which is 123 : posts/123
   const { id } = useParams()
-  console.log('id', id);
+  // console.log('id', id);
 
   //so we useEffect first for getPost(id) hence it will fill the post object in redux. when there is post we use
   //Effect for fetching getPostBysearch by tags.. it will populate the posts...
@@ -60,7 +60,7 @@ const PostDetails = () => {
   //posts.filter is each post inside posts then we want to destructure each post by the _id then if the _id is
   //the same as post._id(from the one post we click bro) filter it...
   const recommendedPosts = posts?.filter(({ _id }) => _id !== post._id)
-  console.log('recommendedpost', recommendedPosts)
+  // console.log('recommendedpost', recommendedPosts)
   // console.log('length', recommendedPosts?.length)
 
 
@@ -90,7 +90,7 @@ const PostDetails = () => {
           <Divider style={{ margin: '20px 0' }} />
           <Typography variant="body1"><strong>Realtime Chat - coming soon!</strong></Typography>
           <Divider style={{ margin: '20px 0' }} />
-          <Typography variant="body1"><strong>Comments - coming soon!</strong></Typography>
+          <CommentSection post={post} />
           <Divider style={{ margin: '20px 0' }} />
         </Box>
         <Box sx={(theme) => ({
@@ -108,7 +108,7 @@ const PostDetails = () => {
           }} />
         </Box>
       </Box>
-      {!!recommendedPosts.length && (
+      {!!recommendedPosts?.length && (
         <Box sx={{
           borderRadius: '20px',
           margin: '10px',
@@ -116,22 +116,23 @@ const PostDetails = () => {
         }}>
           <Typography gutterBottom variant="h5">You might also like:</Typography>
           <Divider />
-          <Box sx={(theme) => ({
+          <Grid container spacing={2} sx={(theme) => ({
             display: 'flex',
             [theme.breakpoints.down("sm")]: {
+              // bgcolor : 'red',
               flexDirection: 'column',
             }
           })}>
             {recommendedPosts.map(({ title, name, message, likes, selectedFile, _id }) => (
-              <Box style={{ margin: '20px', cursor: 'pointer' }} onClick={() => openPost(_id)}  key={_id}>
+              <Grid item xs={2}>
                 <Typography gutterBottom variant="h6">{title}</Typography>
                 <Typography gutterBottom variant="subtitle2">{name}</Typography>
                 <Typography gutterBottom variant="subtitle2">{message}</Typography>
-                <Typography gutterBottom variant="subtitle1">Likes: {likes.length}</Typography>
+                <Typography gutterBottom variant="subtitle1">Likes: {likes?.length}</Typography>
                 <img src={selectedFile} width="200px" />
-              </Box>
+              </Grid>
             ))}
-          </Box>
+          </Grid>
         </Box>
       )}
     </Paper>

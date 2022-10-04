@@ -16,6 +16,7 @@ import PostDetails from './components/PostDetails/PostDetails';
 
 const App = () => {
     const user = JSON.parse(localStorage.getItem('profile'));
+    console.log('is user exist?', user);
 
     return (
         <GoogleOAuthProvider clientId={`${process.env.REACT_APP_PUBLIC_GOOGLE_API_TOKEN}`}>
@@ -31,6 +32,7 @@ const App = () => {
   
                         {/* <Route path="/auth" exact element={ !user ? <Auth /> : <Navigate to= "/posts" /> } /> */}
                         <Route path="/auth" element={!user ? <Auth /> : <Navigate to="/posts" />} />
+                        {/* <Route path="/auth" exact element={<Auth />} /> */}
 
 
                     </Routes>

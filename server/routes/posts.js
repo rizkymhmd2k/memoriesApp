@@ -1,6 +1,6 @@
 import express from 'express'
 
-import {getPostsbySearch, getPosts, getPost, createPost, updatePost, deletePost, likePost} from '../controllers/posts.js'
+import {getPostsbySearch, getPosts, getPost, createPost, updatePost, deletePost, likePost, commentPost} from '../controllers/posts.js'
 import auth from '../middleware/auth.js';
 
 
@@ -26,6 +26,8 @@ router.patch('/:id', auth, updatePost);
 router.delete('/:id', auth, deletePost)
 //user can only like once for one spesific user id (BACKEND)
 router.patch('/:id/likePost', auth, likePost)
+router.post('/:id/commentPost', auth, commentPost)
+
 
 
 export default router;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './styles.css';
 import { Card, CardActions, CardContent, CardMedia, Button, Typography, ButtonBase } from '@mui/material';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
@@ -18,13 +18,36 @@ const Post = ({ post, setCurrentId }) => {
     const user = JSON.parse(localStorage.getItem('profile'));
     // console.log('what user', user?.result);
 
+    const [likes, setLikes] = useState(post?.likes)
+
+    const hasLikedPost = post.likes.find((like) => like === (user?.result?._id))
+    const userId = (user?.result?._id)
+
+    const handleLike = async ()=>{
+        dispatch(likePost(post._id))
+        //booleanvalue
+        if(hasLikedPost){
+            //if they already liked it, we unlike it. remove the id
+            //returning all but the one that equals passed in id
+            setLikes(post.likes.filter((id)=>id !== userId ))
+        }else{
+            //if they havent liked it, add the id
+            setLikes([...post.likes, userId])
+        }
+        //this is faster because updating data in database is using async, and it takes time
+        //while this method works instantly from Front End
+    }
+
+
     const Likes = () => {
-        if (post.likes.length > 0) {
-            return post.likes.find((like) => like === (user?.result?._id))
+        //replace post.likes to our frontend LIKE state
+        if (likes.length > 0) {
+            //check whether like array contains the id of the current person? remember we push id in backend of likes array
+            return likes.find((like) => like === userId)
                 ? (
-                    <><ThumbUpIcon fontSize="small" />&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}`}</>
+                    <><ThumbUpIcon fontSize="small" />&nbsp;{likes.length > 2 ? `You and ${likes.length - 1} others` : `${likes.length} like${likes.length > 1 ? 's' : ''}`}</>
                 ) : ( //if you havent liked
-                    <><ThumbUpIcon fontSize="small" />&nbsp;{post.likes.length} {post.likes.length === 1 ? 'Like' : 'Likes'}</>
+                    <><ThumbUpIcon fontSize="small" />&nbsp;{likes.length} {likes.length === 1 ? 'Like' : 'Likes'}</>
                 );
         }
         //if no one likes yet
@@ -64,7 +87,9 @@ const Post = ({ post, setCurrentId }) => {
             </CardContent>
             <CardActions className='cardActions'>
                 {/* disable buttonn if no user logged */}
-                <Button size='small' disabled={!user?.result} color='primary' onClick={() => dispatch(likePost(post._id))}>
+                {/* <Button size='small' disabled={!user?.result} color='primary' onClick={() => dispatch(likePost(post._id))}> old tricks*/}
+                <Button size='small' disabled={!user?.result} color='primary' onClick={handleLike}>
+
                     <Likes />
                 </Button>
                 {/* Disable button for non creator */}

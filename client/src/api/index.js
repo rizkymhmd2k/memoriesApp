@@ -43,6 +43,9 @@ export const deletePost = (id) => axios.delete(`/posts/${id}`);
 
 export const likePost = (id) => axios.patch(`/posts/${id}/likePost`);
 
+export const comment = (value, id) => axios.post(`/posts/${id}/commentPost`, {value});
+
+
 ///USERS
 
 export const signInGoogle = (accessToken) => axios.post('/users/signin', {

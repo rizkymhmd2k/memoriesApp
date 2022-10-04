@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { AppBar, Button, Toolbar, Typography, Avatar, Box } from '@mui/material'
 import memories from '../../images/memories-Logo.png';
 import memoriesText from '../../images/memories-Text.png';
+import { deepPurple } from '@mui/material/colors';
+
 
 import { Link } from 'react-router-dom'
 import { Container } from '@mui/system';
@@ -52,50 +54,91 @@ const Navbar = () => {
 
     return (
         <AppBar position='static' color='inherit'
-            sx={{
-                borderRadius: 15,
+            sx={(theme) => ({
+                borderRadius: 4,
                 margin: '30px 0',
                 display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'center',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: '10px 50px',
+                [theme.breakpoints.down("md")]: {
+                    flexWrap: 'wrap',
+                    flexDirection: 'column',
+                    // bgcolor: 'red',
+                    justifyContent: 'space-between',
+                    p: 2,
+                }
+            })}
+        >
+            {/* <Container maxWidth="xl"> */}
+
+            <Link to='/' style={{
+                display: 'flex',
                 alignItems: 'center',
             }}>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <Box sx={{
+                <img component={Link} to="/" src={memoriesText} alt="icon" height="45px" />
+                <img src={memories} alt='memories' height="40px" style={{ marginLeft: '10px', marginTop: '5px' }} />
+            </Link>
+
+            <Toolbar sx={(theme) => ({
+                display: 'flex',
+                justifyContent: 'flex-end',
+                width: '400px',
+                [theme.breakpoints.down("md")]: {
+                    width: 'auto',
+                    // justifyContent: 'flex-center',
+                    // p : 2,
+                    // bgcolor: 'red'
+                }
+            })} >
+                {/* <Box sx={{
                         maxWidth: '100%',
                         margin: 'auto'
                     }}>
-                        <Link to='/' >
-                            <img component={Link} to="/" src={memoriesText} alt="icon" height="45px" />
-                            <img src={memories} alt='memories' height="40px" style={{ marginLeft: '10px', marginTop: '5px' }} />
-                        </Link>
-                    </Box>
-                    <Box>
-                        <Toolbar>
-                            {/* logic: IF the user is logged in vs if they are not */}
-                            {user?.result ? (
-                                <Box sx={{
-                                    display: 'flex', //bikin jdi horizontall
-                                    justifyContent: 'space-between',
-                                    width: '350px',
-                                }}>
-                                    {/* no refer policy fixed the errors, try to load image to fix the error */}
-                                    {/* <img alt={user.result.name} referrerPolicy="no-referrer" src={user.result.profilePicture} /> */}
+                    //link component
+                    </Box> */}
+                {/* <Box>
+                        <Toolbar> */}
+                {/* logic: IF the user is logged in vs if they are not */}
+                {user?.result ? (
+                    <Box sx={(theme) => ({
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '400px',
+                        alignItems: 'center',
+                        [theme.breakpoints.down("sm")]: {
+                            //width auto for flexible letter
+                            width: 'auto',
+                            marginTop: 2,
+                            justifyContent: 'center',
+                        }
+                    })}>
+                        {/* no refer policy fixed the errors, try to load image to fix the error */}
+                        {/* <img alt={user.result.name} referrerPolicy="no-referrer" src={user.result.profilePicture} /> */}
 
-                                    <Avatar alt={user.result.name} referrerPolicy="no-referrer" src={user.result.profilePicture} />
+                        <Avatar alt={user.result.name} referrerPolicy="no-referrer" src={user.result.profilePicture} sx={(theme) => ({
+                            color: theme.palette.getContrastText(deepPurple[500]),
+                            backgroundColor: deepPurple[500],
+                        })} />
 
-                                    <Typography variant='h6'>{user.result.name}</Typography>
-                                    <Button variant='contained' color='secondary' onClick={logout}
-                                    >Logout</Button>
-                                </Box>
-                            ) : (
-                                <Button component={Link} exact to='/auth' variant='contained' color='primary'>Sign In</Button>
-                            )}
-                        </Toolbar>
+                        <Typography sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            textAlign: 'center',
+                        }} variant='h6'>{user.result.name} </Typography>
+                        <Button variant='contained' color='secondary' onClick={logout} sx={{
+                            marginLeft: '20px',
+                        }}
+                        >Logout</Button>
                     </Box>
-                </Toolbar>
-            </Container>
+                ) : (
+                    <Button component={Link} exact to='/auth' variant='contained' color='primary'>Sign In</Button>
+                )}
+                {/* </Toolbar>
+                    </Box> */}
+            </Toolbar>
+            {/* </Container> */}
         </AppBar>
     )
 }

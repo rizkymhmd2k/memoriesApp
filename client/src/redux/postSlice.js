@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import * as api from '../api'
 
 //create action here
@@ -22,12 +22,12 @@ export const getPostsBySearch = createAsyncThunk('posts/getpostsbysearch', async
     dispatch(setIsLoading(true))
     const { data } = await api.fetchPostsBySearch(searchQuery); //to destrucure use : searchQuery.search/tags
 
-    console.log('getPostsBySearch', data);
+    // console.log('getPostsBySearch', data);
     return data;
 })
 
 
-export const createPost = createAsyncThunk('posts/create', async ({postData, navigate}) => {
+export const createPost = createAsyncThunk('posts/create', async ({ postData, navigate }) => {
     //jika newpost satu aja maka tidak spesifik bisa diganti apa saja
     const response = await api.createPost(postData);
     navigate(`/posts/${response.data._id}`)
@@ -58,6 +58,16 @@ export const likePost = createAsyncThunk('posts/:id/likepost', async (currentId)
     const response = await api.likePost(currentId);
 
     return response.data;
+});
+
+export const commentPost = createAsyncThunk('posts/:id/commentPost', async ({ value, id }) => {
+    console.log('value', value);
+    console.log('id', id);
+
+    const { data } = await api.comment(value, id);
+    console.log('data from asyncThunk', data);
+    //return only comments
+    return data;
 });
 
 
@@ -123,7 +133,7 @@ export const postsSlice = createSlice({
                 ...state.posts,
                 posts: action.payload.data
             }
-            console.log('getPostsBySearchBuilder', state.posts);
+            // console.log('getPostsBySearchBuilder', state.posts);
             state.isLoading = false;
         });
         builder.addCase(createPost.fulfilled, (state, action) => {
@@ -150,6 +160,28 @@ export const postsSlice = createSlice({
             state.posts = {
                 ...state.posts, posts: state.posts.posts.map(post =>
                     post._id === action.payload._id ? action.payload : post
+                )
+            };
+        });
+        builder.addCase(commentPost.fulfilled, (state, action) => {
+            // console.log('likePost Builder fired - action.payload = ', action.payload);
+            console.log('payload from builder', action.payload);
+            state.posts = {
+                //return all the other posts normally...
+                //change the post that just received a comment...
+                ...state.posts, posts: state.posts.posts.map(post => {
+                    console.log('id1', action.payload._id)
+                    console.log('id2', post._id)
+                    if (post._id === action.payload._id) {
+                        //yes comment?
+                        console.log('payloadt1', action.payload);
+                        return action.payload;
+                    }
+                    //no comments empty
+                    //current to show state
+                    console.log('postt2', (current(post)));
+                    return post;
+                }
                 )
             };
         });
