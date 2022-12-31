@@ -54,14 +54,14 @@ const CommentSection = ({ post }) => {
                     ))} */}
                     {
                         comments.map((c, i) => (
-                            <Typography key={i} gutterBottom variant='subtitle1'>
-                                <strong>{c?.split(': ')[0]}</strong> : {c?.split(': ')[1]} 
-                                {/* `${user.result.name}: ${comment}` */}
+                            <Typography key={i} gutterBottom variant="subtitle1">
+                                <strong>{c.split(': ')[0]}</strong>
+                                {c.split(':')[1]}
                             </Typography>
                         ))
                     }
                     {/* anchor point, the end of scroll */}
-                    <Box ref={commentsRef} /> 
+                    <Box ref={commentsRef} />
                 </Box>
                 {user &&
                     <Box style={{ width: '70%' }}>
