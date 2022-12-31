@@ -29,6 +29,7 @@ app.use('/users', userRoutes);
 
 const PORT = process.env.PORT|| 2002;
 
+mongoose.set("strictQuery", false);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     // listen for requests

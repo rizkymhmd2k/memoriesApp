@@ -132,7 +132,7 @@ const Navbar = () => {
                         >Logout</Button>
                     </Box>
                 ) : (
-                    <div></div>
+                    <Button component={Link} exact to='/auth' variant='text' color='primary'>Sign In</Button>
                 )}
                 {/* </Toolbar>
                     </Box> */}
